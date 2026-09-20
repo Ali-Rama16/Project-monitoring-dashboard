@@ -23,6 +23,7 @@ export default function Login() {
     <div className="login-page">
       <form onSubmit={handleLogin} className="login-form">
         <h1>Project Monitoring Dashboard</h1>
+        <p className="tagline">Masuk untuk memantau progres proyek Anda</p>
         <input
           type="email"
           placeholder="Email"
