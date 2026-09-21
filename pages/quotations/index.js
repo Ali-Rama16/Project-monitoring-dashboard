@@ -30,6 +30,12 @@ export default function Quotations() {
     loadData()
   }
 
+  async function handleDelete(id) {
+    if (!confirm('Hapus quotation ini beserta seluruh PO, dokumen, dan data pembayaran terkait?')) return
+    await supabase.from('quotations').delete().eq('id', id)
+    loadData()
+  }
+
   return (
     <div>
       <h1>Daftar Quotation</h1>
@@ -70,7 +76,12 @@ export default function Quotations() {
                 <span className={`badge ${q.status}`}>{q.status}</span>
               </td>
               <td>
-                <Link href={`/quotations/${q.id}`}>Detail</Link>
+                <div className="row-actions">
+                  <Link href={`/quotations/${q.id}`}>Detail</Link>
+                  <button className="btn-sm btn-danger" onClick={() => handleDelete(q.id)}>
+                    Hapus
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

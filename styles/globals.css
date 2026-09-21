@@ -233,6 +233,34 @@ button:hover { opacity: 0.88; }
 .badge.rejected { background: #fbe8e7; color: var(--bad); }
 .badge.submitted, .badge.pending, .badge.partial { background: #fbf1de; color: var(--warn); }
 
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.btn-danger {
+  background: var(--bad);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
 .status-actions {
   display: flex;
   align-items: center;
