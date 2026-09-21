@@ -4,9 +4,9 @@ import { supabase } from '../lib/supabaseClient'
 export default function Finance() {
   const [payments, setPayments] = useState([])
   const [pos, setPos] = useState([])
-  const [form, setForm] = useState({ po_id: '', amount: '', status: 'unpaid' })
+  const [form, setForm] = useState({ po_id: '', amount: '', status: 'unpaid', keterangan: '' })
   const [editingId, setEditingId] = useState(null)
-  const [editValues, setEditValues] = useState({ amount: '', status: 'unpaid' })
+  const [editData, setEditData] = useState({ amount: '', status: 'unpaid', keterangan: '' })
 
   async function loadData() {
     const { data: poList } = await supabase.from('purchase_orders').select('id, po_number')
@@ -29,14 +29,15 @@ export default function Finance() {
       po_id: form.po_id,
       amount: form.amount,
       status: form.status,
+      keterangan: form.keterangan,
     })
-    setForm({ po_id: '', amount: '', status: 'unpaid' })
+    setForm({ po_id: '', amount: '', status: 'unpaid', keterangan: '' })
     loadData()
   }
 
   function startEdit(p) {
     setEditingId(p.id)
-    setEditValues({ amount: p.amount, status: p.status })
+    setEditData({ amount: p.amount, status: p.status, keterangan: p.keterangan || '' })
   }
 
   function cancelEdit() {
@@ -46,7 +47,7 @@ export default function Finance() {
   async function saveEdit(id) {
     await supabase
       .from('payments')
-      .update({ amount: editValues.amount, status: editValues.status })
+      .update({ amount: editData.amount, status: editData.status, keterangan: editData.keterangan })
       .eq('id', id)
     setEditingId(null)
     loadData()
@@ -87,6 +88,11 @@ export default function Finance() {
           <option value="partial">Sebagian</option>
           <option value="paid">Lunas</option>
         </select>
+        <input
+          placeholder="Keterangan (opsional)"
+          value={form.keterangan}
+          onChange={(e) => setForm({ ...form, keterangan: e.target.value })}
+        />
         <button type="submit">Simpan</button>
       </form>
 
@@ -96,6 +102,7 @@ export default function Finance() {
             <th>PO</th>
             <th>Jumlah</th>
             <th>Status</th>
+            <th>Keterangan</th>
             <th>Tanggal</th>
             <th></th>
           </tr>
@@ -104,24 +111,31 @@ export default function Finance() {
           {payments.map((p) => (
             <tr key={p.id}>
               <td>{p.purchase_orders?.po_number}</td>
+
               {editingId === p.id ? (
                 <>
                   <td>
                     <input
                       type="number"
-                      value={editValues.amount}
-                      onChange={(e) => setEditValues({ ...editValues, amount: e.target.value })}
+                      value={editData.amount}
+                      onChange={(e) => setEditData({ ...editData, amount: e.target.value })}
                     />
                   </td>
                   <td>
                     <select
-                      value={editValues.status}
-                      onChange={(e) => setEditValues({ ...editValues, status: e.target.value })}
+                      value={editData.status}
+                      onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                     >
                       <option value="unpaid">Belum Dibayar</option>
                       <option value="partial">Sebagian</option>
                       <option value="paid">Lunas</option>
                     </select>
+                  </td>
+                  <td>
+                    <input
+                      value={editData.keterangan}
+                      onChange={(e) => setEditData({ ...editData, keterangan: e.target.value })}
+                    />
                   </td>
                   <td>{p.payment_date}</td>
                   <td>
@@ -141,6 +155,7 @@ export default function Finance() {
                   <td>
                     <span className={`badge ${p.status}`}>{p.status}</span>
                   </td>
+                  <td>{p.keterangan || '-'}</td>
                   <td>{p.payment_date}</td>
                   <td>
                     <div className="row-actions">
@@ -158,7 +173,7 @@ export default function Finance() {
           ))}
           {payments.length === 0 && (
             <tr>
-              <td colSpan={5}>Belum ada data pembayaran.</td>
+              <td colSpan={6}>Belum ada data pembayaran.</td>
             </tr>
           )}
         </tbody>
