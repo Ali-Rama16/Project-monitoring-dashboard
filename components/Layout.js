@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { supabase } from '../lib/supabaseClient'
+import { TruckIcon } from './Icons'
 
 export default function Layout({ children }) {
   const router = useRouter()
@@ -64,6 +65,9 @@ export default function Layout({ children }) {
           {children}
         </div>
       </main>
+      <div className="activity-strip">
+        <TruckIcon className="truck" />
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../lib/supabaseClient'
+import { WorkerMascot } from '../components/Icons'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -21,6 +22,7 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <WorkerMascot style={{ width: 110, height: 100 }} />
       <form onSubmit={handleLogin} className="login-form">
         <h1>Project Monitoring Dashboard</h1>
         <p className="tagline">Masuk untuk memantau progres proyek Anda</p>
