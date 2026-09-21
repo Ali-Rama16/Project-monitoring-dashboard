@@ -1,43 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-
-function IconQuotation() {
-  return (
-    <svg className="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-      <path d="M6 3h9l4 4v14H6z" strokeLinejoin="round" />
-      <path d="M15 3v4h4" strokeLinejoin="round" />
-      <path d="M9 12h7M9 15.5h7M9 8.5h3" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function IconPO() {
-  return (
-    <svg className="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-      <rect x="5" y="4" width="14" height="17" rx="1" />
-      <path d="M9 3h6v3H9z" />
-      <path d="M8.5 12.5l2 2 4.5-4.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconPaid() {
-  return (
-    <svg className="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M8.5 12.5l2.2 2.2L16 9.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function IconUnpaid() {
-  return (
-    <svg className="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3.2 2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
+import { IconQuotation, IconPO, IconPaid, IconUnpaid } from '../components/Icons'
 
 function CardSkeleton() {
   return (
@@ -95,22 +58,22 @@ export default function Home() {
       ) : (
         <div className="cards">
           <div className="card">
-            <IconQuotation />
+            <IconQuotation className="card-icon" />
             <h3>{stats.quotations}</h3>
             <p>Total Quotation</p>
           </div>
           <div className="card">
-            <IconPO />
+            <IconPO className="card-icon" />
             <h3>{stats.po}</h3>
             <p>Total PO</p>
           </div>
           <div className="card">
-            <IconPaid />
+            <IconPaid className="card-icon" />
             <h3>Rp {stats.paid.toLocaleString('id-ID')}</h3>
             <p>Sudah Dibayar</p>
           </div>
           <div className="card">
-            <IconUnpaid />
+            <IconUnpaid className="card-icon" />
             <h3>Rp {stats.unpaid.toLocaleString('id-ID')}</h3>
             <p>Belum Dibayar</p>
           </div>

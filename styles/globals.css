@@ -404,3 +404,18 @@ button, .sidebar nav a, a {
   color: var(--steel);
   margin-top: 6px;
 }
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px dashed var(--steel);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink);
+}
+.upload-label:hover {
+  border-color: var(--safety);
+  background: #fffaf0;
+}

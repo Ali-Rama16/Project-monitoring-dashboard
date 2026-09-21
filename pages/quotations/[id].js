@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../../lib/supabaseClient'
+import { IconPO, IconDocument, IconUpload } from '../../components/Icons'
 
 function extractStoragePath(url) {
   const marker = '/documents/'
@@ -110,7 +111,14 @@ export default function QuotationDetail() {
     loadAll()
   }
 
-  if (!quotation) return <p>Memuat...</p>
+  if (!quotation) {
+    return (
+      <div>
+        <div className="skeleton skeleton-title" style={{ width: 260, height: 26 }}></div>
+        <div className="skeleton skeleton-text" style={{ width: 160, marginTop: 8 }}></div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -162,7 +170,10 @@ export default function QuotationDetail() {
         </select>
       </div>
 
-      <h2>Purchase Order</h2>
+      <h2 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <IconPO style={{ width: 18, height: 18, color: 'var(--blueprint)' }} />
+        Purchase Order
+      </h2>
       <form onSubmit={addPO} className="inline-form">
         <input
           placeholder="Nomor PO"
@@ -208,8 +219,15 @@ export default function QuotationDetail() {
         </tbody>
       </table>
 
-      <h2>Dokumen Pendukung</h2>
-      <input type="file" onChange={uploadDoc} />
+      <h2 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <IconDocument style={{ width: 18, height: 18, color: 'var(--blueprint)' }} />
+        Dokumen Pendukung
+      </h2>
+      <label className="upload-label">
+        <IconUpload style={{ width: 15, height: 15, marginRight: 6, verticalAlign: -3 }} />
+        Pilih File
+        <input type="file" onChange={uploadDoc} style={{ display: 'none' }} />
+      </label>
       <table>
         <thead>
           <tr>
