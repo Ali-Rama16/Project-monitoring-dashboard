@@ -5,6 +5,8 @@ export default function Finance() {
   const [payments, setPayments] = useState([])
   const [pos, setPos] = useState([])
   const [form, setForm] = useState({ po_id: '', amount: '', status: 'unpaid' })
+  const [editingId, setEditingId] = useState(null)
+  const [editValues, setEditValues] = useState({ amount: '', status: 'unpaid' })
 
   async function loadData() {
     const { data: poList } = await supabase.from('purchase_orders').select('id, po_number')
@@ -29,6 +31,30 @@ export default function Finance() {
       status: form.status,
     })
     setForm({ po_id: '', amount: '', status: 'unpaid' })
+    loadData()
+  }
+
+  function startEdit(p) {
+    setEditingId(p.id)
+    setEditValues({ amount: p.amount, status: p.status })
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+  }
+
+  async function saveEdit(id) {
+    await supabase
+      .from('payments')
+      .update({ amount: editValues.amount, status: editValues.status })
+      .eq('id', id)
+    setEditingId(null)
+    loadData()
+  }
+
+  async function deletePayment(id) {
+    if (!confirm('Hapus data pembayaran ini?')) return
+    await supabase.from('payments').delete().eq('id', id)
     loadData()
   }
 
@@ -71,22 +97,68 @@ export default function Finance() {
             <th>Jumlah</th>
             <th>Status</th>
             <th>Tanggal</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {payments.map((p) => (
             <tr key={p.id}>
               <td>{p.purchase_orders?.po_number}</td>
-              <td>Rp {Number(p.amount).toLocaleString('id-ID')}</td>
-              <td>
-                <span className={`badge ${p.status}`}>{p.status}</span>
-              </td>
-              <td>{p.payment_date}</td>
+              {editingId === p.id ? (
+                <>
+                  <td>
+                    <input
+                      type="number"
+                      value={editValues.amount}
+                      onChange={(e) => setEditValues({ ...editValues, amount: e.target.value })}
+                    />
+                  </td>
+                  <td>
+                    <select
+                      value={editValues.status}
+                      onChange={(e) => setEditValues({ ...editValues, status: e.target.value })}
+                    >
+                      <option value="unpaid">Belum Dibayar</option>
+                      <option value="partial">Sebagian</option>
+                      <option value="paid">Lunas</option>
+                    </select>
+                  </td>
+                  <td>{p.payment_date}</td>
+                  <td>
+                    <div className="row-actions">
+                      <button className="btn-sm" onClick={() => saveEdit(p.id)}>
+                        Simpan
+                      </button>
+                      <button className="btn-sm btn-secondary" onClick={cancelEdit}>
+                        Batal
+                      </button>
+                    </div>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td>Rp {Number(p.amount).toLocaleString('id-ID')}</td>
+                  <td>
+                    <span className={`badge ${p.status}`}>{p.status}</span>
+                  </td>
+                  <td>{p.payment_date}</td>
+                  <td>
+                    <div className="row-actions">
+                      <button className="btn-sm btn-secondary" onClick={() => startEdit(p)}>
+                        Edit
+                      </button>
+                      <button className="btn-sm btn-danger" onClick={() => deletePayment(p.id)}>
+                        Hapus
+                      </button>
+                    </div>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
           {payments.length === 0 && (
             <tr>
-              <td colSpan={4}>Belum ada data pembayaran.</td>
+              <td colSpan={5}>Belum ada data pembayaran.</td>
             </tr>
           )}
         </tbody>
