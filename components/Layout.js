@@ -59,7 +59,11 @@ export default function Layout({ children }) {
         </nav>
         <button onClick={handleLogout}>Keluar</button>
       </aside>
-      <main className="content">{children}</main>
+      <main className="content">
+        <div className="page-transition" key={router.asPath}>
+          {children}
+        </div>
+      </main>
     </div>
   )
 }

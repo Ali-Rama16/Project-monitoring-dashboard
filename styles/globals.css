@@ -306,3 +306,101 @@ button:hover { opacity: 0.88; }
   font-size: 13px;
   margin: 0;
 }
+
+/* --- Responsif layar kecil --- */
+@media (max-width: 640px) {
+  .content { padding: 20px; }
+  h1 { font-size: 19px; }
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .card h3 { font-size: 19px; }
+  .sidebar { width: 190px; padding: 20px 14px; }
+}
+
+/* --- Animasi & micro-interaction --- */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-transition {
+  animation: fadeInUp 0.28s ease both;
+}
+
+.cards .card {
+  animation: fadeInUp 0.35s ease both;
+}
+.cards .card:nth-child(1) { animation-delay: 0.02s; }
+.cards .card:nth-child(2) { animation-delay: 0.08s; }
+.cards .card:nth-child(3) { animation-delay: 0.14s; }
+.cards .card:nth-child(4) { animation-delay: 0.2s; }
+
+.card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(18, 48, 71, 0.1);
+}
+
+.card-icon {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  color: var(--blueprint);
+}
+
+table tbody tr {
+  transition: background 0.12s ease;
+}
+table tbody tr:hover {
+  background: #faf6ec;
+}
+
+button, .sidebar nav a, a {
+  transition: background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.badge {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, #eae7de 25%, #f4f2ec 37%, #eae7de 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: 2px;
+  display: inline-block;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+.skeleton-title {
+  width: 60%;
+  height: 26px;
+  margin-bottom: 8px;
+}
+.skeleton-text {
+  width: 80%;
+  height: 12px;
+}
+
+/* Meter bar (progress ala "meteran" untuk status keuangan) */
+.meter {
+  height: 8px;
+  background: var(--line);
+  overflow: hidden;
+  margin-top: 10px;
+}
+.meter-fill {
+  height: 100%;
+  background: var(--safety);
+  transition: width 0.6s ease;
+}
+.meter-label {
+  font-size: 12px;
+  color: var(--steel);
+  margin-top: 6px;
+}
