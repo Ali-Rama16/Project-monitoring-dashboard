@@ -80,6 +80,7 @@ export function TruckIcon(props) {
 }
 export function WorkerMascot(props) {
   return (
+    <svg viewBox="0 0 160 150" {...props}>
       <ellipse cx="80" cy="138" rx="55" ry="8" fill="#d9c99a" opacity="0.5" />
       <rect x="52" y="70" width="56" height="55" rx="14" fill="#ff7a3d" />
       <rect x="52" y="70" width="56" height="16" fill="#ffd88a" opacity="0.85" />
