@@ -3,6 +3,13 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { supabase } from '../lib/supabaseClient'
 import { TruckIcon } from './Icons'
+import { GearIcon, BlueprintSketch } from './Illustrations'
+
+const NAV = [
+  { href: '/', label: 'Ringkasan' },
+  { href: '/quotations', label: 'Quotation' },
+  { href: '/finance', label: 'Keuangan' },
+]
 
 export default function Layout({ children }) {
   const router = useRouter()
@@ -39,25 +46,29 @@ export default function Layout({ children }) {
     return <p style={{ padding: 32 }}>Memuat...</p>
   }
 
+  const isActive = (href) =>
+    href === '/' ? router.pathname === '/' : router.pathname.startsWith(href)
+
   return (
     <div className="layout">
       <aside className="sidebar">
         <div className="brand">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 20V11.5C4 7.36 7.36 4 11.5 4H12C16.14 4 19.5 7.36 19.5 11.5V20" stroke="#F2A900" strokeWidth="1.8" strokeLinecap="round"/>
-            <path d="M2 20H21" stroke="#F2A900" strokeWidth="1.8" strokeLinecap="round"/>
-            <path d="M4 15H19" stroke="#F2A900" strokeWidth="1.8" strokeLinecap="round" opacity="0.55"/>
-          </svg>
+          <div className="brand-logo">
+            <img src="/logo.png" alt="Always Selalu" />
+          </div>
           <div className="brand-text">
-            <h2>PM Dashboard</h2>
             <span>Project Monitoring</span>
           </div>
         </div>
         <nav>
-          <Link href="/">Ringkasan</Link>
-          <Link href="/quotations">Quotation</Link>
-          <Link href="/finance">Keuangan</Link>
+          {NAV.map((item) => (
+            <Link key={item.href} href={item.href} className={isActive(item.href) ? 'active' : ''}>
+              <span>{item.label}</span>
+              <GearIcon className={`nav-gear${isActive(item.href) ? ' spin' : ''}`} />
+            </Link>
+          ))}
         </nav>
+        <BlueprintSketch className="sidebar-sketch" />
         <button onClick={handleLogout}>Keluar</button>
       </aside>
       <main className="content">
@@ -67,6 +78,7 @@ export default function Layout({ children }) {
       </main>
       <div className="activity-strip">
         <TruckIcon className="truck" />
+        <span className="strip-copy">© 2026 Always Selalu</span>
       </div>
     </div>
   )
