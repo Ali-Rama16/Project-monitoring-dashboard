@@ -664,7 +664,6 @@ button, .sidebar nav a, a {
 .team-photo-wrap {
   position: fixed;
   right: 26px;
-  bottom: 46px;
   width: 336px;
   z-index: 6;
   pointer-events: auto;
@@ -672,6 +671,7 @@ button, .sidebar nav a, a {
   transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     z-index 0s 0.45s;
 }
 
@@ -683,7 +683,8 @@ button, .sidebar nav a, a {
   z-index: 60;
   transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .team-photo-frame {
@@ -691,9 +692,7 @@ button, .sidebar nav a, a {
   padding: 10px 10px 26px;
   border-radius: 3px;
   box-shadow: 0 18px 30px rgba(20, 28, 34, 0.32), 0 2px 6px rgba(20, 28, 34, 0.18);
-  transition: transform 0.08s linear, padding 0.45s ease;
-  transform: rotate(-4deg);
-  will-change: transform;
+  transition: padding 0.45s ease;
 }
 
 .team-photo-wrap.expanded .team-photo-frame {
