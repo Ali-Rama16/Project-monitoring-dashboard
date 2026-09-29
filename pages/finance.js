@@ -127,12 +127,12 @@ export default function Finance() {
       <table>
         <thead>
           <tr>
-            <th>Nomor Referensi</th>
+            <th>Nama Pekerjaan</th>
             <th>Nilai Kontrak</th>
             <th>Sudah Dibayar</th>
             <th>Sisa</th>
             <th>Status</th>
-            <th>Keterangan</th>
+            <th>Nomor Referensi</th>
             <th>Tanggal</th>
             <th></th>
           </tr>
@@ -145,10 +145,14 @@ export default function Finance() {
 
             return (
               <tr key={p.id}>
-                <td>{p.purchase_orders?.po_number}</td>
-
                 {editingId === p.id ? (
                   <>
+                    <td>
+                      <input
+                        value={editData.keterangan}
+                        onChange={(e) => setEditData({ ...editData, keterangan: e.target.value })}
+                      />
+                    </td>
                     <td>
                       <input
                         type="number"
@@ -174,12 +178,7 @@ export default function Finance() {
                         <option value="paid">Lunas</option>
                       </select>
                     </td>
-                    <td>
-                      <input
-                        value={editData.keterangan}
-                        onChange={(e) => setEditData({ ...editData, keterangan: e.target.value })}
-                      />
-                    </td>
+                    <td>{p.purchase_orders?.po_number}</td>
                     <td>{p.payment_date}</td>
                     <td>
                       <div className="row-actions">
@@ -194,13 +193,14 @@ export default function Finance() {
                   </>
                 ) : (
                   <>
+                    <td>{p.keterangan || '-'}</td>
                     <td>Rp {contract.toLocaleString('id-ID')}</td>
                     <td>Rp {paid.toLocaleString('id-ID')}</td>
                     <td>Rp {remaining.toLocaleString('id-ID')}</td>
                     <td>
                       <span className={`badge ${p.status}`}>{p.status}</span>
                     </td>
-                    <td>{p.keterangan || '-'}</td>
+                    <td>{p.purchase_orders?.po_number}</td>
                     <td>{p.payment_date}</td>
                     <td>
                       <div className="row-actions">
