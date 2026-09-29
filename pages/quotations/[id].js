@@ -63,7 +63,7 @@ export default function QuotationDetail() {
   }
 
   async function deleteQuotation() {
-    if (!confirm('Hapus quotation ini beserta seluruh PO, dokumen, dan data pembayaran terkait? Tindakan ini tidak bisa dibatalkan.')) return
+    if (!confirm('Hapus quotation ini beserta seluruh Nomor Referensi, dokumen, dan data pembayaran terkait? Tindakan ini tidak bisa dibatalkan.')) return
     await supabase.from('quotations').delete().eq('id', id)
     router.push('/quotations')
   }
@@ -81,7 +81,7 @@ export default function QuotationDetail() {
   }
 
   async function deletePO(poId) {
-    if (!confirm('Hapus PO ini beserta data pembayaran terkait?')) return
+    if (!confirm('Hapus Nomor Referensi ini beserta data pembayaran terkait?')) return
     await supabase.from('purchase_orders').delete().eq('id', poId)
     loadAll()
   }
@@ -187,21 +187,21 @@ export default function QuotationDetail() {
 
       <h2 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <IconPO style={{ width: 18, height: 18, color: 'var(--blueprint)' }} />
-        Purchase Order
+        Nomor Referensi
       </h2>
       <form onSubmit={addPO} className="inline-form">
         <input
-          placeholder="Nomor PO"
+          placeholder="Nomor Referensi"
           value={poForm.po_number}
           onChange={(e) => setPoForm({ po_number: e.target.value })}
           required
         />
-        <button type="submit">Tambah PO</button>
+        <button type="submit">Tambah Nomor Referensi</button>
       </form>
       <table>
         <thead>
           <tr>
-            <th>Nomor PO</th>
+            <th>Nomor Referensi</th>
             <th>Status</th>
             <th>Tanggal</th>
             <th></th>
@@ -228,7 +228,7 @@ export default function QuotationDetail() {
           ))}
           {pos.length === 0 && (
             <tr>
-              <td colSpan={4}>Belum ada PO.</td>
+              <td colSpan={4}>Belum ada Nomor Referensi.</td>
             </tr>
           )}
         </tbody>

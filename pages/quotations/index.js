@@ -48,7 +48,7 @@ export default function Quotations() {
   }
 
   async function handleDelete(id) {
-    if (!confirm('Hapus quotation ini beserta seluruh PO, dokumen, dan data pembayaran terkait?')) return
+    if (!confirm('Hapus quotation ini beserta seluruh Nomor Referensi, dokumen, dan data pembayaran terkait?')) return
     await supabase.from('quotations').delete().eq('id', id)
     loadData()
   }

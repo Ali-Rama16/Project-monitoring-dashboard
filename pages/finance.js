@@ -69,7 +69,7 @@ export default function Finance() {
           onChange={(e) => setForm({ ...form, po_id: e.target.value })}
           required
         >
-          <option value="">Pilih PO</option>
+          <option value="">Pilih Nomor Referensi</option>
           {pos.map((po) => (
             <option key={po.id} value={po.id}>
               {po.po_number}
@@ -99,7 +99,7 @@ export default function Finance() {
       <table>
         <thead>
           <tr>
-            <th>PO</th>
+            <th>Nomor Referensi</th>
             <th>Jumlah</th>
             <th>Status</th>
             <th>Keterangan</th>
