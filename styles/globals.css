@@ -665,9 +665,25 @@ button, .sidebar nav a, a {
   position: fixed;
   right: 26px;
   bottom: 46px;
-  width: 168px;
+  width: 336px;
   z-index: 6;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    z-index 0s 0.45s;
+}
+
+.team-photo-wrap.expanded {
+  width: min(900px, 82vw);
+  right: 50%;
+  bottom: 50%;
+  transform: translate(50%, 50%);
+  z-index: 60;
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .team-photo-frame {
@@ -675,9 +691,14 @@ button, .sidebar nav a, a {
   padding: 10px 10px 26px;
   border-radius: 3px;
   box-shadow: 0 18px 30px rgba(20, 28, 34, 0.32), 0 2px 6px rgba(20, 28, 34, 0.18);
-  transition: transform 0.08s linear;
+  transition: transform 0.08s linear, padding 0.45s ease;
   transform: rotate(-4deg);
   will-change: transform;
+}
+
+.team-photo-wrap.expanded .team-photo-frame {
+  padding: 18px 18px 38px;
+  box-shadow: 0 30px 60px rgba(10, 15, 20, 0.55);
 }
 
 .team-photo-frame img {
@@ -695,6 +716,11 @@ button, .sidebar nav a, a {
   color: #4a4238;
   text-align: center;
   letter-spacing: 0.2px;
+  transition: font-size 0.45s ease;
+}
+
+.team-photo-wrap.expanded .team-photo-caption {
+  font-size: 20px;
 }
 
 .team-photo-pin {
@@ -708,6 +734,19 @@ button, .sidebar nav a, a {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 2px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.team-photo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 25, 0);
+  pointer-events: none;
+  z-index: 55;
+  transition: background 0.45s ease;
+}
+
+.team-photo-wrap.expanded ~ .team-photo-overlay {
+  background: rgba(15, 20, 25, 0.55);
 }
 
 @media (max-width: 900px) {
