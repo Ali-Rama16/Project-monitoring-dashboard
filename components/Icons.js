@@ -97,3 +97,23 @@ export function WorkerMascot(props) {
     </svg>
   )
 }
+
+export function IconCamera(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+      <path d="M4 8h3l1.6-2.4h6.8L17 8h3v11H4z" strokeLinejoin="round" />
+      <circle cx="12" cy="13.2" r="3.4" />
+    </svg>
+  )
+}
+
+export function IconBast(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+      <path d="M6 3h9l4 4v14H6z" strokeLinejoin="round" />
+      <path d="M15 3v4h4" strokeLinejoin="round" />
+      <path d="M9 11.5h6" strokeLinecap="round" />
+      <path d="M9 17c1.2-2.4 2-2.4 2.6-.6.4 1.2 1.2 1.2 2.4-.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}

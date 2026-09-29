@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '../../lib/supabaseClient'
 import { IconPO, IconDocument, IconUpload } from '../../components/Icons'
+import DocIndicators from '../../components/DocIndicators'
+import { DOC_TYPES } from '../../lib/docTypes'
 
 function extractStoragePath(url) {
   const marker = '/documents/'
@@ -17,6 +19,7 @@ export default function QuotationDetail() {
   const [pos, setPos] = useState([])
   const [docs, setDocs] = useState([])
   const [poForm, setPoForm] = useState({ po_number: '' })
+  const [docType, setDocType] = useState('quotation')
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState({ project_name: '', client_name: '' })
 
@@ -84,7 +87,8 @@ export default function QuotationDetail() {
   }
 
   async function uploadDoc(e) {
-    const file = e.target.files[0]
+    const input = e.target
+    const file = input.files[0]
     if (!file) return
     const filePath = `${id}/${Date.now()}_${file.name}`
     const { error } = await supabase.storage.from('documents').upload(filePath, file)
@@ -94,11 +98,18 @@ export default function QuotationDetail() {
         quotation_id: id,
         file_name: file.name,
         file_url: urlData.publicUrl,
+        doc_type: docType,
       })
       loadAll()
     } else {
       alert('Gagal upload: ' + error.message)
     }
+    input.value = ''
+  }
+
+  async function updateDocType(docId, newType) {
+    await supabase.from('documents').update({ doc_type: newType || null }).eq('id', docId)
+    loadAll()
   }
 
   async function deleteDoc(doc) {
@@ -170,6 +181,10 @@ export default function QuotationDetail() {
         </select>
       </div>
 
+      <div style={{ marginBottom: 4 }}>
+        <DocIndicators types={new Set(docs.map((d) => d.doc_type).filter(Boolean))} />
+      </div>
+
       <h2 style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <IconPO style={{ width: 18, height: 18, color: 'var(--blueprint)' }} />
         Purchase Order
@@ -223,15 +238,25 @@ export default function QuotationDetail() {
         <IconDocument style={{ width: 18, height: 18, color: 'var(--blueprint)' }} />
         Dokumen Pendukung
       </h2>
-      <label className="upload-label">
-        <IconUpload style={{ width: 15, height: 15, marginRight: 6, verticalAlign: -3 }} />
-        Pilih File
-        <input type="file" onChange={uploadDoc} style={{ display: 'none' }} />
-      </label>
+      <div className="inline-form">
+        <select value={docType} onChange={(e) => setDocType(e.target.value)}>
+          {DOC_TYPES.map((t) => (
+            <option key={t.key} value={t.key}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+        <label className="upload-label">
+          <IconUpload style={{ width: 15, height: 15, marginRight: 6, verticalAlign: -3 }} />
+          Pilih File
+          <input type="file" onChange={uploadDoc} style={{ display: 'none' }} />
+        </label>
+      </div>
       <table>
         <thead>
           <tr>
             <th>Nama File</th>
+            <th>Jenis</th>
             <th>Diunggah</th>
             <th></th>
           </tr>
@@ -244,6 +269,16 @@ export default function QuotationDetail() {
                   {d.file_name}
                 </a>
               </td>
+              <td>
+                <select value={d.doc_type || ''} onChange={(e) => updateDocType(d.id, e.target.value)}>
+                  <option value="">Belum ditentukan</option>
+                  {DOC_TYPES.map((t) => (
+                    <option key={t.key} value={t.key}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </td>
               <td>{new Date(d.uploaded_at).toLocaleDateString('id-ID')}</td>
               <td>
                 <button className="btn-sm btn-danger" onClick={() => deleteDoc(d)}>
@@ -254,7 +289,7 @@ export default function QuotationDetail() {
           ))}
           {docs.length === 0 && (
             <tr>
-              <td colSpan={3}>Belum ada dokumen.</td>
+              <td colSpan={4}>Belum ada dokumen.</td>
             </tr>
           )}
         </tbody>

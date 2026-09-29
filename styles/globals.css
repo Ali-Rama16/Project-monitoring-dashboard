@@ -597,3 +597,65 @@ button, .sidebar nav a, a {
 @media (max-width: 560px) {
   .cards { grid-template-columns: 1fr; }
 }
+
+/* ---------- Indikator kelengkapan dokumen ---------- */
+.status-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.doc-indicators {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.doc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 7px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  cursor: default;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.doc-chip svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.doc-chip.done {
+  background: #dff3e7;
+  color: #1f7a48;
+  border-color: rgba(47, 138, 88, 0.5);
+}
+
+.doc-chip.missing {
+  background: #fbe3e0;
+  color: #c0392f;
+  border-color: rgba(207, 74, 63, 0.5);
+}
+
+.doc-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 4px 0 10px;
+  font-size: 13px;
+  color: #33414b;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.legend-dot.done { background: #2f9e5c; }
+.legend-dot.missing { background: #cf4a3f; }

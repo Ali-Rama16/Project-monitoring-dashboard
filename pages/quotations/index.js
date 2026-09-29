@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../lib/supabaseClient'
 import { IconQuotation, IconEmptyBox } from '../../components/Icons'
+import DocIndicators from '../../components/DocIndicators'
 
 export default function Quotations() {
   const [list, setList] = useState([])
+  const [docMap, setDocMap] = useState({})
   const [loading, setLoading] = useState(true)
   const [form, setForm] = useState({ project_name: '', client_name: '' })
 
@@ -15,6 +17,17 @@ export default function Quotations() {
       .select('*')
       .order('created_at', { ascending: false })
     setList(data || [])
+
+    // ambil jenis dokumen yang sudah terupload untuk semua quotation
+    const { data: docs } = await supabase.from('documents').select('quotation_id, doc_type')
+    const map = {}
+    ;(docs || []).forEach((d) => {
+      if (!d.doc_type) return
+      if (!map[d.quotation_id]) map[d.quotation_id] = new Set()
+      map[d.quotation_id].add(d.doc_type)
+    })
+    setDocMap(map)
+
     setLoading(false)
   }
 
@@ -63,6 +76,12 @@ export default function Quotations() {
         </button>
       </form>
 
+      <div className="doc-legend">
+        <span>Kelengkapan dokumen:</span>
+        <span><i className="legend-dot done"></i>Sudah diupload</span>
+        <span><i className="legend-dot missing"></i>Belum diupload</span>
+      </div>
+
       {loading ? (
         <table>
           <tbody>
@@ -71,7 +90,7 @@ export default function Quotations() {
                 <td><div className="skeleton skeleton-text" style={{ width: '80%' }}></div></td>
                 <td><div className="skeleton skeleton-text" style={{ width: '60%' }}></div></td>
                 <td><div className="skeleton skeleton-text" style={{ width: '50%' }}></div></td>
-                <td><div className="skeleton skeleton-text" style={{ width: '40%' }}></div></td>
+                <td><div className="skeleton skeleton-text" style={{ width: '70%' }}></div></td>
                 <td></td>
               </tr>
             ))}
@@ -95,12 +114,15 @@ export default function Quotations() {
           </thead>
           <tbody>
             {list.map((q, i) => (
-              <tr key={q.id} style={{ animation: `fadeInUp 0.3s ease both`, animationDelay: `${i * 0.03}s` }}>
+              <tr key={q.id} style={{ animation: `fadeInUp 0.3s ease backwards`, animationDelay: `${i * 0.03}s` }}>
                 <td>{q.project_name}</td>
                 <td>{q.client_name}</td>
                 <td>{q.submit_date}</td>
                 <td>
-                  <span className={`badge ${q.status}`}>{q.status}</span>
+                  <div className="status-cell">
+                    <span className={`badge ${q.status}`}>{q.status}</span>
+                    <DocIndicators types={docMap[q.id]} />
+                  </div>
                 </td>
                 <td>
                   <div className="row-actions">
