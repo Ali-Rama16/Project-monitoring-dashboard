@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { supabase } from '../lib/supabaseClient'
 import { TruckIcon } from './Icons'
 import { GearIcon, BlueprintSketch } from './Illustrations'
+import TeamPhoto from './TeamPhoto'
 
 const NAV = [
   { href: '/', label: 'Ringkasan' },
@@ -76,6 +77,7 @@ export default function Layout({ children }) {
           {children}
         </div>
       </main>
+      <TeamPhoto />
       <div className="activity-strip">
         <TruckIcon className="truck" />
         <span className="strip-copy">© 2026 Always Selalu</span>

@@ -659,3 +659,57 @@ button, .sidebar nav a, a {
 }
 .legend-dot.done { background: #2f9e5c; }
 .legend-dot.missing { background: #cf4a3f; }
+
+/* ---------- Foto tim (dekorasi polaroid, mengikuti mouse) ---------- */
+.team-photo-wrap {
+  position: fixed;
+  right: 26px;
+  bottom: 46px;
+  width: 168px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.team-photo-frame {
+  background: #fdfcf8;
+  padding: 10px 10px 26px;
+  border-radius: 3px;
+  box-shadow: 0 18px 30px rgba(20, 28, 34, 0.32), 0 2px 6px rgba(20, 28, 34, 0.18);
+  transition: transform 0.08s linear;
+  transform: rotate(-4deg);
+  will-change: transform;
+}
+
+.team-photo-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.team-photo-caption {
+  margin: 8px 2px 0;
+  font-family: "Barlow", cursive;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4a4238;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.team-photo-pin {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-8deg);
+  width: 26px;
+  height: 14px;
+  background: linear-gradient(180deg, #f3d24a, #d9a91f);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 900px) {
+  .team-photo-wrap { display: none; }
+}
