@@ -1,18 +1,10 @@
-import { useState } from 'react'
-
-// Satu foto polaroid: diam sedikit miring saat normal, dan membesar penuh
-// ke tengah layar (efek lightbox) saat kursor diarahkan ke fotonya.
-// Transisi murni lewat CSS supaya animasinya halus, tanpa update per-frame.
+// Foto polaroid dengan efek 3D sederhana: miring diam saat normal, lalu
+// terangkat + tilt 3D halus saat kursor di atasnya. Murni CSS (:hover),
+// tanpa state React dan tanpa pelacakan posisi mouse per-frame, jadi
+// tidak ada peluang "flicker" antara status hover dan tidak hover.
 function Polaroid({ src, caption, rotate, bottom }) {
-  const [hovered, setHovered] = useState(false)
-
   return (
-    <div
-      className={`team-photo-wrap${hovered ? ' expanded' : ''}`}
-      style={hovered ? undefined : { bottom, transform: `rotate(${rotate}deg)` }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="team-photo-wrap" style={{ bottom, '--rot': `${rotate}deg` }}>
       <div className="team-photo-frame">
         <span className="team-photo-pin"></span>
         <img src={src} alt={caption} />
@@ -27,7 +19,6 @@ export default function TeamPhoto() {
     <>
       <Polaroid src="/team-photo-2.jpg" caption="Always Selalu Team" rotate={3} bottom="548px" />
       <Polaroid src="/team-photo.jpg" caption="Always Selalu Team" rotate={-4} bottom="46px" />
-      <div className="team-photo-overlay"></div>
     </>
   )
 }

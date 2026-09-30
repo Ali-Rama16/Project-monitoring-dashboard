@@ -660,44 +660,33 @@ button, .sidebar nav a, a {
 .legend-dot.done { background: #2f9e5c; }
 .legend-dot.missing { background: #cf4a3f; }
 
-/* ---------- Foto tim (dekorasi polaroid, mengikuti mouse) ---------- */
+/* ---------- Foto tim (dekorasi polaroid, tilt 3D saat hover) ---------- */
 .team-photo-wrap {
   position: fixed;
   right: 26px;
   width: 336px;
   z-index: 6;
-  pointer-events: auto;
   cursor: pointer;
-  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    z-index 0s 0.45s;
+  transform: rotate(var(--rot));
+  transition: transform 0.35s ease, z-index 0s;
 }
 
-.team-photo-wrap.expanded {
-  width: min(900px, 82vw);
-  right: 50%;
-  bottom: 50%;
-  transform: translate(50%, 50%);
-  z-index: 60;
-  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    right 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+.team-photo-wrap:hover {
+  transform: perspective(800px) rotateX(-8deg) rotateY(10deg) scale(1.22) translateY(-8px);
+  z-index: 20;
 }
 
 .team-photo-frame {
+  position: relative;
   background: #fdfcf8;
   padding: 10px 10px 26px;
   border-radius: 3px;
   box-shadow: 0 18px 30px rgba(20, 28, 34, 0.32), 0 2px 6px rgba(20, 28, 34, 0.18);
-  transition: padding 0.45s ease;
+  transition: box-shadow 0.35s ease;
 }
 
-.team-photo-wrap.expanded .team-photo-frame {
-  padding: 18px 18px 38px;
-  box-shadow: 0 30px 60px rgba(10, 15, 20, 0.55);
+.team-photo-wrap:hover .team-photo-frame {
+  box-shadow: 0 30px 46px rgba(10, 15, 20, 0.45);
 }
 
 .team-photo-frame img {
@@ -715,11 +704,6 @@ button, .sidebar nav a, a {
   color: #4a4238;
   text-align: center;
   letter-spacing: 0.2px;
-  transition: font-size 0.45s ease;
-}
-
-.team-photo-wrap.expanded .team-photo-caption {
-  font-size: 20px;
 }
 
 .team-photo-pin {
@@ -733,19 +717,6 @@ button, .sidebar nav a, a {
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 2px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
-}
-
-.team-photo-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 20, 25, 0);
-  pointer-events: none;
-  z-index: 55;
-  transition: background 0.45s ease;
-}
-
-.team-photo-wrap.expanded ~ .team-photo-overlay {
-  background: rgba(15, 20, 25, 0.55);
 }
 
 @media (max-width: 900px) {
