@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { supabase } from '../lib/supabaseClient'
 import { IconQuotation, IconPO, IconPaid, IconUnpaid } from '../components/Icons'
 import {
@@ -70,7 +71,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="cards">
-          <div className="card">
+          <Link href="/quotations" className="card">
             <div className="plate">
               <DecoCompass className="deco deco-compass" />
               <div className="plate-body">
@@ -82,9 +83,9 @@ export default function Home() {
               </div>
             </div>
             <DecoCrane className="crane" />
-          </div>
+          </Link>
 
-          <div className="card">
+          <Link href="/quotations" className="card">
             <div className="plate">
               <DecoBlueprintCheck className="deco deco-blueprint" />
               <div className="plate-body">
@@ -96,9 +97,9 @@ export default function Home() {
               </div>
             </div>
             <DecoCrane className="crane" />
-          </div>
+          </Link>
 
-          <div className="card">
+          <Link href="/finance" className="card">
             <div className="plate">
               <DecoCoins className="deco deco-coins" />
               <div className="plate-body">
@@ -109,9 +110,9 @@ export default function Home() {
                 <p>Sudah Dibayar</p>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="card">
+          <Link href="/finance" className="card">
             <div className="plate">
               <DecoTruck className="deco deco-truck" />
               <div className="plate-body">
@@ -122,7 +123,7 @@ export default function Home() {
                 <p>Belum Dibayar</p>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       )}
 
