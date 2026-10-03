@@ -80,16 +80,16 @@ export default function Layout({ children }) {
     async function checkInvoices() {
       const { data } = await supabase
         .from('invoices')
-        .select('id, supplier_name, invoice_number, amount, due_date, status')
+        .select('id, supplier_name, invoice_number, amount, due_date, due_time, status')
         .neq('status', 'paid')
 
       const urgent = (data || [])
         .map((inv) => ({
           ...inv,
-          urgency: getInvoiceUrgency(inv.due_date, inv.status),
-          label: getDueDaysLabel(inv.due_date, inv.status),
+          urgency: getInvoiceUrgency(inv.due_date, inv.due_time, inv.status),
+          label: getDueDaysLabel(inv.due_date, inv.due_time, inv.status),
         }))
-        .filter((inv) => inv.urgency === 'overdue' || inv.urgency === 'soon')
+        .filter((inv) => inv.urgency !== 'ok' && inv.urgency !== 'paid')
 
       setUrgentCount(urgent.length)
       notifyUrgentInvoices(urgent)

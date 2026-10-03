@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { getInvoiceUrgency, getDueDaysLabel, urgencyBadgeClass } from '../../lib/invoiceUtils'
+import { IconUpload } from '../../components/Icons'
+
+function extractStoragePath(url) {
+  const marker = '/documents/'
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  return url.substring(idx + marker.length)
+}
 
 const emptyForm = {
   supplier_name: '',
@@ -8,6 +16,7 @@ const emptyForm = {
   category: 'material',
   amount: '',
   due_date: '',
+  due_time: '',
   keterangan: '',
 }
 
@@ -40,6 +49,7 @@ export default function Invoices() {
       category: form.category,
       amount: form.amount,
       due_date: form.due_date,
+      due_time: form.due_time || null,
       keterangan: form.keterangan,
     })
     setForm(emptyForm)
@@ -54,6 +64,7 @@ export default function Invoices() {
       category: inv.category || 'material',
       amount: inv.amount,
       due_date: inv.due_date,
+      due_time: inv.due_time || '',
       keterangan: inv.keterangan || '',
     })
   }
@@ -71,6 +82,7 @@ export default function Invoices() {
         category: editData.category,
         amount: editData.amount,
         due_date: editData.due_date,
+        due_time: editData.due_time || null,
         keterangan: editData.keterangan,
       })
       .eq('id', id)
@@ -89,6 +101,35 @@ export default function Invoices() {
   async function deleteInvoice(id) {
     if (!confirm('Hapus tagihan ini?')) return
     await supabase.from('invoices').delete().eq('id', id)
+    loadData()
+  }
+
+  async function uploadInvoiceFile(inv, e) {
+    const input = e.target
+    const file = input.files[0]
+    if (!file) return
+    const filePath = `invoices/${inv.id}/${Date.now()}_${file.name}`
+    const { error } = await supabase.storage.from('documents').upload(filePath, file)
+    if (!error) {
+      const { data: urlData } = supabase.storage.from('documents').getPublicUrl(filePath)
+      await supabase
+        .from('invoices')
+        .update({ file_name: file.name, file_url: urlData.publicUrl })
+        .eq('id', inv.id)
+      loadData()
+    } else {
+      alert('Gagal upload: ' + error.message)
+    }
+    input.value = ''
+  }
+
+  async function removeInvoiceFile(inv) {
+    if (!confirm('Hapus bukti tagihan ini?')) return
+    const path = inv.file_url ? extractStoragePath(inv.file_url) : null
+    if (path) {
+      await supabase.storage.from('documents').remove([path])
+    }
+    await supabase.from('invoices').update({ file_name: null, file_url: null }).eq('id', inv.id)
     loadData()
   }
 
@@ -130,6 +171,12 @@ export default function Invoices() {
           title="Tanggal jatuh tempo"
         />
         <input
+          type="time"
+          value={form.due_time}
+          onChange={(e) => setForm({ ...form, due_time: e.target.value })}
+          title="Jam jatuh tempo (opsional, default akhir hari)"
+        />
+        <input
           placeholder="Keterangan (opsional)"
           value={form.keterangan}
           onChange={(e) => setForm({ ...form, keterangan: e.target.value })}
@@ -161,13 +208,14 @@ export default function Invoices() {
               <th>Jatuh Tempo</th>
               <th>Keterangan</th>
               <th>Status</th>
+              <th>Bukti Tagihan</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {list.map((inv) => {
-              const urgency = getInvoiceUrgency(inv.due_date, inv.status)
-              const label = getDueDaysLabel(inv.due_date, inv.status)
+              const urgency = getInvoiceUrgency(inv.due_date, inv.due_time, inv.status)
+              const label = getDueDaysLabel(inv.due_date, inv.due_time, inv.status)
 
               if (editingId === inv.id) {
                 return (
@@ -206,6 +254,12 @@ export default function Invoices() {
                         value={editData.due_date}
                         onChange={(e) => setEditData({ ...editData, due_date: e.target.value })}
                       />
+                      <input
+                        type="time"
+                        value={editData.due_time}
+                        onChange={(e) => setEditData({ ...editData, due_time: e.target.value })}
+                        style={{ marginTop: 4 }}
+                      />
                     </td>
                     <td>
                       <input
@@ -215,6 +269,15 @@ export default function Invoices() {
                     </td>
                     <td>
                       <span className={`badge ${urgencyBadgeClass(urgency)}`}>{inv.status}</span>
+                    </td>
+                    <td>
+                      {inv.file_url ? (
+                        <a href={inv.file_url} target="_blank" rel="noreferrer">
+                          {inv.file_name || 'Lihat file'}
+                        </a>
+                      ) : (
+                        '-'
+                      )}
                     </td>
                     <td>
                       <div className="row-actions">
@@ -237,7 +300,10 @@ export default function Invoices() {
                   <td style={{ textTransform: 'capitalize' }}>{inv.category}</td>
                   <td>Rp {Number(inv.amount).toLocaleString('id-ID')}</td>
                   <td>
-                    <div>{inv.due_date}</div>
+                    <div>
+                      {inv.due_date}
+                      {inv.due_time ? ` ${inv.due_time.slice(0, 5)}` : ''}
+                    </div>
                     <span className={`badge ${urgencyBadgeClass(urgency)}`}>{label}</span>
                   </td>
                   <td>{inv.keterangan || '-'}</td>
@@ -245,6 +311,36 @@ export default function Invoices() {
                     <span className={`badge ${inv.status === 'paid' ? 'approved' : ''}`}>
                       {inv.status === 'paid' ? 'Lunas' : 'Belum Dibayar'}
                     </span>
+                  </td>
+                  <td>
+                    {inv.file_url ? (
+                      <div className="row-actions">
+                        <a href={inv.file_url} target="_blank" rel="noreferrer">
+                          {inv.file_name || 'Lihat file'}
+                        </a>
+                        <label className="upload-label btn-sm" style={{ padding: '4px 10px' }}>
+                          Ganti
+                          <input
+                            type="file"
+                            onChange={(e) => uploadInvoiceFile(inv, e)}
+                            style={{ display: 'none' }}
+                          />
+                        </label>
+                        <button className="btn-sm btn-danger" onClick={() => removeInvoiceFile(inv)}>
+                          Hapus File
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="upload-label btn-sm" style={{ padding: '4px 10px' }}>
+                        <IconUpload style={{ width: 13, height: 13, marginRight: 5, verticalAlign: -2 }} />
+                        Upload
+                        <input
+                          type="file"
+                          onChange={(e) => uploadInvoiceFile(inv, e)}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                    )}
                   </td>
                   <td>
                     <div className="row-actions">
@@ -264,7 +360,7 @@ export default function Invoices() {
             })}
             {list.length === 0 && (
               <tr>
-                <td colSpan={8}>Belum ada tagihan.</td>
+                <td colSpan={9}>Belum ada tagihan.</td>
               </tr>
             )}
           </tbody>
